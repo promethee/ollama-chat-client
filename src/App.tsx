@@ -43,9 +43,6 @@ function App() {
     )
     const dispatch = useDispatch()
 
-    const hasModel = model !== undefined
-    const hasModels = models.length > 0
-
     const noModel = model === undefined
     const noModels = models.length === 0
     const noMessages = messages.length === 0
@@ -59,21 +56,19 @@ function App() {
 
     useEffect(() => {
         ;(async () => {
-            if (models.length > 0) {
-                if (model === undefined && models.length === 1) {
-                    dispatch(setModel(models[0]))
-                }
-                return
+            if (model === undefined && models.length === 1) {
+                dispatch(setModel(models[0]))
             }
             const response = await ollamaInstance.list()
             console.info(response)
             dispatch(setModels(response.models))
         })()
-    }, [model, models, dispatch, ollamaInstance])
+    }, [])
 
     const onSend = async (text: string) => {
         if (model === undefined || compactionInProgress || text.length === 0)
             return
+        setUserMessageSent(true)
         dispatch(addUserMessage(text))
         const filteredMessages = messages.map(({ role, content }) => ({
             role,
@@ -149,7 +144,11 @@ function App() {
 
     return (
         <div className="flex flex-col p-4 h-screen justify-center">
-            <MessageBox messages={messages} incomingMessage={incomingMessage} />
+            <MessageBox
+                messages={messages}
+                incomingMessage={incomingMessage}
+                userMessageSent={userMessageSent}
+            />
             <div className="flex flex-row h-1/5 justify-center">
                 <div className="flex flex-col justify-center">
                     <div className="flex flex-row justify-between">

@@ -5,9 +5,11 @@ import { useEffect } from 'react'
 export const MessageBox = ({
     incomingMessage,
     messages,
+    userMessageSent,
 }: {
     incomingMessage: string
     messages: TLog
+    userMessageSent: boolean
 }) => {
     useEffect(() => {
         const id = setTimeout(() => {
@@ -28,7 +30,7 @@ export const MessageBox = ({
 
     return (
         <div className="flex flex-row w-full h-4/5 justify-center">
-            <div className="flex flex-col max-w-7/10 justify-center overflow-y-scroll">
+            <div className="flex flex-col w-full max-w-7/10 justify-center overflow-y-scroll">
                 {messages.map((message: IMessage) => (
                     <div
                         key={message._id}
@@ -38,7 +40,10 @@ export const MessageBox = ({
                         <Message message={message} />
                     </div>
                 ))}
-                <div id="incoming-message" className="flex flex-row">
+                <div
+                    id="incoming-message"
+                    className={`flex flex-row mt-2${userMessageSent ? ' waiting-for-response' : ''}`}
+                >
                     <div className="flex flex-col">
                         {incomingMessage.length > 0 && (
                             <Message message={{ content: incomingMessage }} />
