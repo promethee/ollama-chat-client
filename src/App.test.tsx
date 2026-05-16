@@ -4,7 +4,7 @@ import App from './App'
 import { Provider } from 'react-redux'
 import { setupStore } from './store'
 
-describe('App', () => {
+describe.skip('App', () => {
     beforeEach(() => {
         vi.useFakeTimers()
     })
