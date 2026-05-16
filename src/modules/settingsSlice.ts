@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import type { ISettings } from '../types'
+import type { IOllamaModel, ISettings } from '../types'
 
 const initialState: ISettings = ((settings: string) => {
     if (settings === '{}') {
@@ -8,9 +8,22 @@ const initialState: ISettings = ((settings: string) => {
             url: 'http://localhost:11434/api',
             stream: false,
             sendPreviousMessage: true,
+            models: [],
+            show: false,
+            compactionInProgress: false,
         }
     }
-    return JSON.parse(settings)
+
+    const previousSettings = JSON.parse(settings)
+    return {
+        ...previousSettings,
+        url: previousSettings.url ?? 'http://localhost:11434/api',
+        stream: previousSettings.stream ?? false,
+        sendPreviousMessage: previousSettings.sendPreviousMessage ?? true,
+        models: previousSettings.models ?? [],
+        show: previousSettings.show ?? false,
+        compactionInProgress: previousSettings.compactionInProgress ?? false,
+    }
 })(localStorage.getItem('settings') ?? '{}')
 
 export const settingsSlice = createSlice({
@@ -32,12 +45,33 @@ export const settingsSlice = createSlice({
             localStorage.setItem('settings', JSON.stringify(state))
             return state
         },
+        setModel: (state, action: PayloadAction<IOllamaModel>) => {
+            state.model = action.payload
+            localStorage.setItem('settings', JSON.stringify(state))
+            return state
+        },
+        setModels: (state, action: PayloadAction<IOllamaModel[]>) => {
+            state.models = action.payload
+            localStorage.setItem('settings', JSON.stringify(state))
+            return state
+        },
+        setShow: (state, action: PayloadAction<boolean>) => {
+            state.show = action.payload
+            localStorage.setItem('settings', JSON.stringify(state))
+            return state
+        },
+        setCompactionInProgress: (state, action: PayloadAction<boolean>) => {
+            state.compactionInProgress = action.payload
+            localStorage.setItem('settings', JSON.stringify(state))
+            return state
+        },
         set: (
             state,
             action: PayloadAction<{
                 url: string
                 stream: boolean
                 sendPreviousMessage: boolean
+                models: IOllamaModel[]
             }>
         ) => {
             state.url = action.payload.url
@@ -49,7 +83,15 @@ export const settingsSlice = createSlice({
     },
 })
 
-export const { setUrl, setStream, setSendPreviousMessage, set } =
-    settingsSlice.actions
+export const {
+    setUrl,
+    setStream,
+    setSendPreviousMessage,
+    setModel,
+    setModels,
+    setShow,
+    setCompactionInProgress,
+    set,
+} = settingsSlice.actions
 
 export default settingsSlice.reducer

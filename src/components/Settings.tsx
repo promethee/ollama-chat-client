@@ -1,24 +1,51 @@
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '../store'
-import type { ISettings } from '../types'
+import type { IOllamaModel, ISettings } from '../types'
 import { useState } from 'react'
-import { set } from '../modules/settingsSlice'
+import {
+    setModel,
+    setSendPreviousMessage,
+    setStream,
+} from '../modules/settingsSlice'
 
 export const Settings = () => {
-    const { url, stream, sendPreviousMessage }: ISettings = useSelector(
-        (state: RootState) => state.settings
-    )
+    const { url, stream, sendPreviousMessage, models, model }: ISettings =
+        useSelector((state: RootState) => state.settings)
     const dispatch = useDispatch()
 
     const [ollamaUrl, setOllamaUrl] = useState(url)
-    const [ollamaStream, setOllamaStream] = useState(stream)
-    const [ollamaPreviousMessage, setOllamaPreviousMessage] = useState(stream)
 
     return (
         <div className="flex flex-row min-w-1/3 min-h-1/8 justify-center px-1 py-2 rounded overflow-hidden shadow-lg">
             <div className="flex flex-col w-100 justify-center">
                 <div className="flex flex-row justify-center">
                     <div className="flex flex-col">
+                        <div className="flex flex-row justify-between">
+                            <label className="pr-2">model: </label>
+                            <select
+                                className="disabled:text-gray-400 text-gray-800"
+                                disabled={models.length === 1}
+                                onChange={(ev) => {
+                                    const _model = models.find(
+                                        (__model: IOllamaModel) =>
+                                            __model.name === ev.target.value
+                                    )
+                                    if (_model) {
+                                        dispatch(setModel(_model))
+                                    }
+                                }}
+                            >
+                                {models.map((_model: IOllamaModel) => (
+                                    <option
+                                        key={_model.digest}
+                                        defaultValue={_model.name}
+                                        selected={model?.name === _model.name}
+                                    >
+                                        {_model.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <div className="flex flex-row justify-between">
                             <label className="pr-2">url: </label>
                             <input
@@ -33,9 +60,9 @@ export const Settings = () => {
                             <label className="pr-2">stream: </label>
                             <input
                                 type="checkbox"
-                                checked={ollamaStream}
+                                checked={stream}
                                 onChange={(ev) =>
-                                    setOllamaStream(ev.target.checked)
+                                    dispatch(setStream(ev.target.checked))
                                 }
                             />
                         </div>
@@ -45,28 +72,15 @@ export const Settings = () => {
                             </label>
                             <input
                                 type="checkbox"
-                                checked={ollamaPreviousMessage}
+                                checked={sendPreviousMessage}
                                 onChange={(ev) =>
-                                    setOllamaPreviousMessage(ev.target.checked)
+                                    dispatch(
+                                        setSendPreviousMessage(
+                                            ev.target.checked
+                                        )
+                                    )
                                 }
                             />
-                        </div>
-                        <div className="flex flex-row justify-end">
-                            <button
-                                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-0 px-1 border border-gray-400 rounded shadow"
-                                onClick={() => {
-                                    dispatch(
-                                        set({
-                                            url: ollamaUrl,
-                                            stream: ollamaStream,
-                                            sendPreviousMessage:
-                                                ollamaPreviousMessage,
-                                        })
-                                    )
-                                }}
-                            >
-                                save
-                            </button>
                         </div>
                     </div>
                 </div>
