@@ -1,7 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import settingsReducer from './modules/settingsSlice'
 import logReducer from './modules/logSlice'
-import messageToApi from './middlewares/messageToApi'
 
 const rootReducer = combineReducers({
     log: logReducer,
@@ -12,8 +11,6 @@ export function setupStore(preloadedState?: PreloadedState) {
     return configureStore({
         reducer: rootReducer,
         preloadedState,
-        middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(messageToApi),
     })
 }
 
