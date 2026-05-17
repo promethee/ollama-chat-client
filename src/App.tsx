@@ -60,7 +60,6 @@ function App() {
                 dispatch(setModel(models[0]))
             }
             const response = await ollamaInstance.list()
-            console.info(response)
             dispatch(setModels(response.models))
         })()
     }, [])
@@ -138,7 +137,8 @@ function App() {
         ? 'compacting'
         : 'compact chat history'
 
-    const clearHistoryDisabled = compactionInProgress || noMessages
+    const clearHistoryDisabled =
+        compactionInProgress || noMessages || userMessageSent
     const userInputDisabled =
         noModel || noModels || compactionInProgress || userMessageSent
 
@@ -149,7 +149,7 @@ function App() {
                 incomingMessage={incomingMessage}
                 userMessageSent={userMessageSent}
             />
-            <div className="flex flex-row h-1/5 justify-center">
+            <div className="flex flex-row min-h-1/5 h-1/5 justify-center">
                 <div className="flex flex-col justify-center">
                     <div className="flex flex-row justify-between">
                         <button
@@ -177,20 +177,20 @@ function App() {
                     </div>
 
                     <div className="flex flex-row">
-                        {showSettings ? (
-                            <div className="flex flex-col">
+                        <div className="flex flex-col">
+                            <div className={showSettings ? '' : 'collapse'}>
                                 <Settings />
                             </div>
-                        ) : (
-                            <div className="flex flex-col">
+                            <div className={showSettings ? 'collapse' : ''}>
                                 <UserMessageInput
                                     messagesCount={messages.length}
                                     contextLength={contextLength}
                                     disabled={userInputDisabled}
                                     onSend={onSend}
+                                    userMessageSent={userMessageSent}
                                 />
                             </div>
-                        )}
+                        </div>
                     </div>
                 </div>
             </div>

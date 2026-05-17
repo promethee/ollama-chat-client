@@ -38,8 +38,7 @@ export const Settings = () => {
                                 {models.map((_model: IOllamaModel) => (
                                     <option
                                         key={_model.digest}
-                                        defaultValue={_model.name}
-                                        selected={model?.name === _model.name}
+                                        defaultValue={model?.name}
                                     >
                                         {_model.name}
                                     </option>

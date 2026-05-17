@@ -5,11 +5,13 @@ export const UserMessageInput = function ({
     contextLength,
     disabled,
     onSend,
+    userMessageSent,
 }: {
     messagesCount: number
     contextLength: number
     disabled: boolean
     onSend: (text: string) => void
+    userMessageSent: boolean
 }) {
     const ref = createRef<HTMLTextAreaElement>()
 
@@ -29,11 +31,17 @@ export const UserMessageInput = function ({
     return (
         <div className="flex flex-row min-w-1/3 min-h-1/8 justify-center px-1 py-2 rounded overflow-hidden shadow-lg">
             <div className="flex flex-col w-100 justify-center">
-                <div className="flex flex-row pb-2">
-                    <small className="text-gray-400">
-                        conversation size: {messagesCount} messages, context
-                        length: {contextLength} tokens
-                    </small>
+                <div className="flex flex-row pb-2 justify-center">
+                    {messagesCount === 0 ? (
+                        <small>&nbsp;</small>
+                    ) : (
+                        <small className="text-gray-400">
+                            conversation size: {messagesCount} message
+                            {messagesCount > 1 ? 's' : ''}, context length:{' '}
+                            {contextLength} character
+                            {contextLength > 1 ? 's' : ''}
+                        </small>
+                    )}
                 </div>
                 <div className="flex flex-row justify-between">
                     <div className="flex flex-col">
@@ -63,7 +71,7 @@ export const UserMessageInput = function ({
                                 onClick={_onSend}
                                 disabled={disabled || text.length === 0}
                             >
-                                send
+                                {userMessageSent ? 'sent' : 'send'}
                             </button>
                         </div>
                     </div>
