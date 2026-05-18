@@ -4,6 +4,7 @@ import type { IOllamaModel, ISettings } from '../types'
 import { useState } from 'react'
 import {
     setModel,
+    setUrl,
     setSendPreviousMessage,
     setStream,
 } from '../modules/settingsSlice'
@@ -28,7 +29,7 @@ export const Settings = () => {
                                 onChange={(ev) => {
                                     const _model = models.find(
                                         (__model: IOllamaModel) =>
-                                            __model.name === ev.target.value
+                                            __model.model === ev.target.value
                                     )
                                     if (_model) {
                                         dispatch(setModel(_model))
@@ -38,9 +39,9 @@ export const Settings = () => {
                                 {models.map((_model: IOllamaModel) => (
                                     <option
                                         key={_model.digest}
-                                        defaultValue={model?.name}
+                                        defaultValue={model?.model}
                                     >
-                                        {_model.name}
+                                        {_model.model}
                                     </option>
                                 ))}
                             </select>
@@ -52,6 +53,7 @@ export const Settings = () => {
                                 type="url"
                                 value={ollamaUrl}
                                 onChange={(ev) => setOllamaUrl(ev.target.value)}
+                                onBlur={() => dispatch(setUrl(ollamaUrl))}
                                 size={25}
                             />
                         </div>

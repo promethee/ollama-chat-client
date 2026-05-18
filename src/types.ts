@@ -1,5 +1,5 @@
 export interface IOllamaModel {
-    name: string
+    name?: string
     model: string
     digest: string
 }

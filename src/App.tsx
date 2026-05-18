@@ -59,8 +59,12 @@ function App() {
             if (model === undefined && models.length === 1) {
                 dispatch(setModel(models[0]))
             }
-            const response = await ollamaInstance.list()
-            dispatch(setModels(response.models))
+            try {
+                const response = await ollamaInstance.list()
+                dispatch(setModels(response.models))
+            } catch (error) {
+                console.warn(error)
+            }
         })()
     }, [])
 
@@ -74,7 +78,7 @@ function App() {
             content,
         }))
         const response = await ollamaInstance.chat({
-            model: model.name,
+            model: model.model,
             messages: filteredMessages.concat({ role: 'user', content: text }),
             stream,
         })
@@ -93,6 +97,7 @@ function App() {
         } else {
             dispatch(addIncomingMessage(response.message.content))
         }
+        setUserMessageSent(false)
     }
 
     const onIncomingMessage = (content: string) => {
