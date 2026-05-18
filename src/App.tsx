@@ -154,7 +154,7 @@ function App() {
                 incomingMessage={incomingMessage}
                 userMessageSent={userMessageSent}
             />
-            <div className="flex flex-row min-h-1/5 h-1/5 justify-center">
+            <div className="flex flex-row min-h-1/5 justify-center">
                 <div className="flex flex-col justify-center">
                     <div className="flex flex-row justify-between">
                         <button

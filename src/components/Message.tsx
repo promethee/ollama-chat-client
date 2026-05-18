@@ -6,20 +6,13 @@ export const Message = ({
 }: {
     message: IMessage | IIncomingMessage
 }) => {
-    const isUser = (message as IMessage).role === 'user'
     return (
-        <div className="flex flex-row p-4 rounded overflow-hidden shadow-lg">
+        <div className="flex flex-row p-4 rounded shadow-lg">
             <div className="flex flex-col">
-                <div className="flex flex-row justify-center text-gray-300">
-                    <small>{(message as IMessage).role ?? 'assistant'}</small>
-                </div>
-                <div
-                    className={`flex flex-row justify-${isUser ? 'end' : 'start'}`}
-                >
-                    <div className="flex flex-col">
-                        <Markdown>{message.content}</Markdown>
-                    </div>
-                </div>
+                <small className="text-gray-300">
+                    {(message as IMessage).role ?? 'assistant'}
+                </small>
+                <Markdown>{message.content}</Markdown>
                 <div className="message-bottom"></div>
             </div>
         </div>

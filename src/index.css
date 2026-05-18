@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+.user-message {
+    justify-content: end;
+}
+
 .waiting-for-response {
     background: linear-gradient(90deg, #fff 0%, #eee 50%, #fff 100%);
     background-size: 200% 200%;
