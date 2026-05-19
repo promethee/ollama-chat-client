@@ -8,7 +8,7 @@ import {
 import Settings from './components/Settings'
 import MessageBox from './components/MessagesBox'
 import UserMessageInput from './components/UserMessageInput'
-import { Ollama } from 'ollama'
+import { Ollama, type ChatResponse } from 'ollama'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store'
 import { useEffect, useState } from 'react'
@@ -75,6 +75,21 @@ function App() {
         })()
     }, [])
 
+    const onChatStreamedResponse = async (response: ChatResponse) => {
+        let incomingMessage = ''
+        // @ts-ignore
+        for await (const part of response) {
+            const { done, message } = part
+            if (done) {
+                dispatch(addIncomingMessage(incomingMessage))
+                onIncomingMessage('')
+            } else {
+                incomingMessage += message.content
+                onIncomingMessage(incomingMessage)
+            }
+        }
+    }
+
     const onSend = async (text: string) => {
         if (model === undefined || compactionInProgress || text.length === 0)
             return
@@ -87,20 +102,10 @@ function App() {
         const response = await ollamaInstance.chat({
             model: model.model,
             messages: filteredMessages.concat({ role: 'user', content: text }),
-            stream,
+            stream: stream ? undefined : false,
         })
         if (stream) {
-            let incomingMessage = ''
-            for await (const part of response) {
-                const { done, message } = part
-                if (done) {
-                    dispatch(addIncomingMessage(incomingMessage))
-                    onIncomingMessage('')
-                } else {
-                    incomingMessage += message.content
-                    onIncomingMessage(incomingMessage)
-                }
-            }
+            await onChatStreamedResponse(response)
         } else {
             dispatch(addIncomingMessage(response.message.content))
         }
@@ -123,7 +128,7 @@ function App() {
             )
             .forEach(async (message: IMessage) => {
                 const { response: content } = await ollamaInstance.generate({
-                    model: model.name,
+                    model: model.model,
                     prompt: `summarize the following sentence: "${message.content}" into a single precise and concise sentence, do not reflect on your task, just do it.`,
                 })
                 dispatch(
