@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+button svg {
+    display: inline;
+}
+
 .user-message {
     justify-content: end;
 }

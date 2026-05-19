@@ -14,6 +14,7 @@
     "test:browser": "vitest --config=vitest.browser.config.ts"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.11.2",
     "@tailwindcss/vite": "^4.2.4",
     "ollama": "^0.6.3",

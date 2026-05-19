@@ -1,4 +1,6 @@
 import { createRef, useState } from 'react'
+import { ArrowUpIcon } from '@heroicons/react/24/outline'
+import Button from './Button'
 
 export const UserMessageInput = function ({
     messagesCount,
@@ -65,14 +67,13 @@ export const UserMessageInput = function ({
                     </div>
                     <div className="flex flex-col justify-center">
                         <div className="flex flex-row">
-                            <button
+                            <Button
+                                icon={<ArrowUpIcon className="size-3" />}
+                                text={userMessageSent ? 'sent' : 'send'}
                                 tabIndex={2}
-                                className="bg-white disabled:text-gray-200 hover:bg-gray-100 text-gray-800 font-semibold py-0 px-1 border border-gray-400 rounded shadow"
                                 onClick={_onSend}
                                 disabled={disabled || text.length === 0}
-                            >
-                                {userMessageSent ? 'sent' : 'send'}
-                            </button>
+                            />
                         </div>
                     </div>
                 </div>

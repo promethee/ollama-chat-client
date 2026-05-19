@@ -31,7 +31,7 @@ export const MessageBox = ({
     if (messages.length === 0 && incomingMessage.length === 0) return null
     return (
         <div className="flex flex-row h-4/5 justify-center">
-            <div className="flex flex-col h-auto max-w-7/10 justify-center overflow-y-auto p-8">
+            <div className="flex flex-col h-auto w-full max-w-7/10 justify-center overflow-y-auto p-8">
                 {messages.map((message: IMessage) => (
                     <div
                         key={message._id}

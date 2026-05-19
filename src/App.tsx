@@ -1,4 +1,10 @@
 import './App.css'
+import {
+    ArrowsPointingInIcon,
+    Cog6ToothIcon,
+    ChatBubbleLeftEllipsisIcon,
+    TrashIcon,
+} from '@heroicons/react/24/outline'
 import Settings from './components/Settings'
 import MessageBox from './components/MessagesBox'
 import UserMessageInput from './components/UserMessageInput'
@@ -19,6 +25,7 @@ import {
     setModels,
     setShow,
 } from './modules/settingsSlice'
+import Button from './components/Button'
 
 function App() {
     const {
@@ -137,6 +144,11 @@ function App() {
         )
 
     const contextLength = (localStorage.getItem('log')?.length || 2) - 2
+    const chatOrSettingIcon = showSettings ? (
+        <ChatBubbleLeftEllipsisIcon className="size-5" />
+    ) : (
+        <Cog6ToothIcon className="size-5" />
+    )
     const chatOrSettingsButtonText = showSettings ? 'chat' : 'settings'
     const compactionButtonText = compactionInProgress
         ? 'compacting'
@@ -157,28 +169,25 @@ function App() {
             <div className="flex flex-row min-h-1/5 justify-center">
                 <div className="flex flex-col justify-center">
                     <div className="flex flex-row justify-between">
-                        <button
-                            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-0 px-1 border border-gray-400 rounded shadow"
+                        <Button
+                            icon={chatOrSettingIcon}
+                            text={chatOrSettingsButtonText}
                             onClick={() => {
                                 dispatch(setShow(!showSettings))
                             }}
-                        >
-                            <small>{chatOrSettingsButtonText}</small>
-                        </button>
-                        <button
-                            className="bg-white disabled:text-gray-200 hover:bg-gray-100 text-gray-800 font-semibold py-0 px-1 border border-gray-400 rounded shadow"
+                        />
+                        <Button
+                            icon={<ArrowsPointingInIcon className="size-5" />}
+                            text={compactionButtonText}
                             onClick={onCompacting}
                             disabled={cantCompact}
-                        >
-                            <small>{compactionButtonText}</small>
-                        </button>
-                        <button
-                            className="bg-white disabled:text-gray-200 hover:bg-gray-100 text-gray-800 font-semibold py-0 px-1 border border-gray-400 rounded shadow"
+                        />
+                        <Button
+                            icon={<TrashIcon className="size-5" />}
+                            text="clear history"
                             onClick={() => dispatch(clearHistory())}
                             disabled={clearHistoryDisabled}
-                        >
-                            <small>clear history</small>
-                        </button>
+                        />
                     </div>
 
                     <div className="flex flex-row">
