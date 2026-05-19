@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { IMessage, TLog } from '../types'
@@ -10,7 +11,7 @@ export const logSlice = createSlice({
     reducers: {
         addUserMessage: (state, action: PayloadAction<string>) => {
             const date = Date.now()
-            const _id = crypto.randomUUID()
+            const _id = uuidv4()
             const message: IMessage = {
                 _id,
                 role: 'user',
@@ -24,7 +25,7 @@ export const logSlice = createSlice({
         },
         addIncomingMessage: (state, action: PayloadAction<string>) => {
             const date = Date.now()
-            const _id = crypto.randomUUID()
+            const _id = uuidv4()
             const message: IMessage = {
                 _id,
                 role: 'assistant',
