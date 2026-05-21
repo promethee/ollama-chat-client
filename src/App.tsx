@@ -102,12 +102,13 @@ function App() {
         const response = await ollamaInstance.chat({
             model: model.model,
             messages: filteredMessages.concat({ role: 'user', content: text }),
-            stream: stream ? undefined : false,
+            // @ts-ignore
+            stream,
         })
-        if (stream === false) {
-            dispatch(addIncomingMessage(response.message.content))
-        } else {
+        if (stream) {
             await onChatStreamedResponse(response)
+        } else {
+            dispatch(addIncomingMessage(response.message.content))
         }
         setUserMessageSent(false)
     }
