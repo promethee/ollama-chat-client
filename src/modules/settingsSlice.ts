@@ -5,8 +5,8 @@ import type { IOllamaModel, ISettings } from '../types'
 const initialState: ISettings = ((settings: string) => {
     if (settings === '{}') {
         return {
-            url: 'http://localhost:11434/api',
-            stream: false,
+            url: 'http://localhost:11434',
+            stream: true,
             sendPreviousMessage: true,
             models: [],
             show: false,
@@ -17,8 +17,8 @@ const initialState: ISettings = ((settings: string) => {
     const previousSettings = JSON.parse(settings)
     return {
         ...previousSettings,
-        url: previousSettings.url ?? 'http://localhost:11434/api',
-        stream: previousSettings.stream ?? false,
+        url: previousSettings.url ?? 'http://localhost:11434',
+        stream: previousSettings.stream ?? true,
         sendPreviousMessage: previousSettings.sendPreviousMessage ?? true,
         models: previousSettings.models ?? [],
         show: previousSettings.show ?? false,
