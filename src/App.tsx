@@ -104,10 +104,10 @@ function App() {
             messages: filteredMessages.concat({ role: 'user', content: text }),
             stream: stream ? undefined : false,
         })
-        if (stream) {
-            await onChatStreamedResponse(response)
-        } else {
+        if (stream === false) {
             dispatch(addIncomingMessage(response.message.content))
+        } else {
+            await onChatStreamedResponse(response)
         }
         setUserMessageSent(false)
     }
